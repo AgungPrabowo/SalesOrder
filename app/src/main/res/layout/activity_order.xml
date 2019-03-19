@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        card_view:cardElevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="45dp"
+                android:text="@string/barang"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="22dp" />
+
+            <TextView
+                android:id="@+id/barang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/textView18"
+                android:layout_marginStart="128dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="128dp" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/textView18"
+                android:layout_marginTop="94dp"
+                android:text="@string/stock"
+                android:layout_alignLeft="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/stock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/barang"
+                android:layout_alignTop="@+id/textView20"
+                android:layout_alignLeft="@+id/barang" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/textView18"
+                android:layout_marginTop="138dp"
+                android:text="@string/harga"
+                android:layout_alignLeft="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/harga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/barang"
+                android:layout_alignTop="@+id/textView22"
+                android:layout_alignLeft="@+id/barang" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/textView18"
+                android:layout_marginTop="189dp"
+                android:text="@string/satuan"
+                android:layout_alignLeft="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/satuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/barang"
+                android:layout_alignTop="@+id/textView24"
+                android:layout_alignLeft="@+id/barang" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="34dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/textView18"
+                android:layout_marginTop="237dp"
+                android:text="@string/qty"
+                android:layout_alignLeft="@+id/textView18" />
+
+            <EditText
+                android:id="@+id/jumlah"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignLeft="@+id/barang"
+                android:layout_alignTop="@+id/textView26"
+                android:layout_marginTop="-7dp"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="0" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <HorizontalScrollView
+                android:layout_width="364dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/textView18"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="-5dp"
+                android:background="#49000000"
+                android:visibility="visible"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="11dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" />
+            </HorizontalScrollView>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
