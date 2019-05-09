@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,10 +22,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.root.salesorder.Adapter.AdapterTes;
 import com.example.root.salesorder.Adapter.Model;
+import com.example.root.salesorder.Model.ModelPelanggan;
 import com.example.root.salesorder.util.BaseApiService;
 import com.example.root.salesorder.util.ModelOrder1;
 import com.example.root.salesorder.util.UtilsApi;
@@ -32,6 +36,7 @@ import android.location.LocationListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
 
     List<ModelOrder> dataOrder;
+    List<ModelPelanggan> dataPelanggan;
     private AdapterTes hfAdapter;
     private List<Model> headerModelArrayList;
 
@@ -53,11 +59,10 @@ public class MainActivity extends AppCompatActivity
     ProgressDialog loading;
     Context mContext;
 
-    LocationManager locationmanager;
 
+    LocationManager locationmanager;
     String longitude, latitude;
     SharedPrefManager sharedPrefManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,63 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mApiService = UtilsApi.getAPIService(); // meng-init yang ada di package api helper
 //        ambil data barang
+        getDataPelanggan();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getDataBarang();
+            }
+        }, 1000);
+//
+//        if (dataPelanggan == null) {
+//            loading = ProgressDialog.show(this, null, "ambil data barang...",
+//                    true, false);
+//            getDataPelanggan();
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loading.dismiss();
+//                    getDataBarang();
+//                }
+//            }, 1000);
+//        }
+
+//        if (dataPelanggan == null) {
+//            getDataPelanggan();
+//            loading = ProgressDialog.show(this, null, "ambil data barang...",
+//                    true, false);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loading.dismiss();
+////                    getDataPelanggan();
+//                    System.out.println("1");
+//                    getDataBarang();
+//                }
+//            }, 1000);
+//        }
+//        if (dataPelanggan != null) {
+//            getDataPelanggan();
+//            System.out.println("2");
+//            getDataBarang();
+//        }
+//        getDataPelanggan();
+//        getDataBarang();
+//
+//        if (dataPelanggan != null) {
+////            getDataPelanggan();
+//            getDataBarang();
+//        }
+//        getDataPelanggan();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                getDataBarang();
+//            }
+//        }).start();
+        getDataPelanggan();
         getDataBarang();
+
         Model model = new Model();
         model.setText("tes");
         sharedPrefManager = new SharedPrefManager(this);
@@ -112,7 +173,7 @@ public class MainActivity extends AppCompatActivity
     }
 
         private void getDataBarang() {
-        mApiService.getBarang().enqueue(new Callback<List<ModelOrder>>() {
+            mApiService.getBarang().enqueue(new Callback<List<ModelOrder>>() {
             @Override
             public void onResponse(Call<List<ModelOrder>> call, Response<List<ModelOrder>> response) {
                 if (!response.isSuccessful()) {
@@ -154,14 +215,39 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-                hfAdapter = new AdapterTes(mContext, headerModelArrayList, dataOrder);
+                hfAdapter = new AdapterTes(mContext, headerModelArrayList, dataOrder, dataPelanggan);
                 recyclerView.setAdapter(hfAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-                }
+            }
 
             @Override
             public void onFailure(Call<List<ModelOrder>> call, Throwable t) {
-                System.out.println(t.getMessage());
+                System.out.println(t.getMessage()+" barang kosong");
+            }
+        });
+    }
+
+    private void getDataPelanggan() {
+        mApiService.getPelanggan().enqueue(new Callback<List<ModelPelanggan>>() {
+            @Override
+            public void onResponse(Call<List<ModelPelanggan>> call, Response<List<ModelPelanggan>> response) {
+                if (!response.isSuccessful()) {
+                    System.out.println("Code: "+ response.code());
+                    return;
+                }
+                dataPelanggan = new ArrayList<ModelPelanggan>();
+                List<ModelPelanggan> pelanggans = response.body();
+
+                for (int ii=0;ii < pelanggans.size();ii++) {
+                    dataPelanggan.add(new ModelPelanggan(pelanggans.get(ii).getId(),pelanggans.get(ii).getNama(),
+                            pelanggans.get(ii).getEmail(),pelanggans.get(ii).getAlamat(),pelanggans.get(ii).getPhone()));
+                }
+                System.out.println(dataPelanggan.size()+"Tes count");
+            }
+
+            @Override
+            public void onFailure(Call<List<ModelPelanggan>> call, Throwable t) {
+
             }
         });
     }
@@ -208,14 +294,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.map) {
             startActivity(new Intent(MainActivity.this, MapTrackingActivity.class)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.list_pelanggan) {
+            startActivity(new Intent(MainActivity.this, MainActivityPelanggan.class)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
         } else if (id == R.id.logout) {
             spManager.saveSPBoolean(SharedPrefManager.SP_SUDAH_LOGIN, false);
             startActivity(new Intent(MainActivity.this, LoginActivity.class)

@@ -1,9 +1,11 @@
 package com.example.root.salesorder.Adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -11,12 +13,15 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.root.salesorder.MainActivity;
+import com.example.root.salesorder.Model.ModelPelanggan;
 import com.example.root.salesorder.ModelOrder;
 import com.example.root.salesorder.R;
 import com.example.root.salesorder.SharedPrefManager;
@@ -26,6 +31,7 @@ import com.example.root.salesorder.util.UtilsApi;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,18 +47,22 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
     public static final int Normal = 2;
     public static final int Footer = 3;
 
-    String nm, alamatClient;
+    String nm, alamatClient, pelanggan_id;
 
     private LayoutInflater inflater;
     private List<Model> headerModelArrayList;
     private List<ModelOrder> dataOrder;
+    List<ModelPelanggan> dataP;
+    ArrayList<String> arrayPelanggan = new ArrayList<String>();
 
     private Context context;
     ProgressDialog loading;
 
     BaseApiService mApiService;
 
-    public AdapterTes(Context mContext, List<Model> dataSet, List<ModelOrder> dataBarang) {
+
+
+    public AdapterTes(Context mContext, List<Model> dataSet, List<ModelOrder> dataBarang, List<ModelPelanggan> dataPelanggan) {
 //        this.dataSet = dataSet;
 //        this.mContext = mContext;
 //        total_types = dataSet.size();
@@ -60,6 +70,12 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
         this.context = mContext;
         this.headerModelArrayList = dataSet;
         this.dataOrder = dataBarang;
+        this.dataP = dataPelanggan;
+        if(dataP!=null) {
+            System.out.println("dataP ada di constructor");
+        } else {
+            System.out.println("dataP tidak ada di constructork");
+        }
     }
 
    public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -67,6 +83,7 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
         TextView barang, stock, harga, satuan;
         Button submit;
         EditText nama, alamat, jumlah;
+       AutoCompleteTextView autoCompleteTextView;
 
         public MyViewHolder(final View itemView, int viewType) {
             super(itemView);
@@ -79,8 +96,28 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
                 jumlah = (EditText) itemView.findViewById(R.id.jumlah);
 
             } else if (viewType == Header) {
-                nama = (EditText) itemView.findViewById(R.id.nm_client);
-                alamat = (EditText) itemView.findViewById(R.id.alamat_client);
+//                nama = (EditText) itemView.findViewById(R.id.nm_client);
+//                alamat = (EditText) itemView.findViewById(R.id.alamat_client);
+                autoCompleteTextView = itemView.findViewById(R.id.nm_client);
+//                final TextView nmV = itemView.findViewById(R.id.textView3);
+//                nmV.setVisibility(View.INVISIBLE);
+//                autoCompleteTextView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        nmV.setVisibility(View.VISIBLE);
+//                    }
+//                });
+
+//                int countPelanggan = dataP.size();
+                if(dataP!=null){
+                    for (int w = 0;w < dataP.size();w++) {
+                        arrayPelanggan.add(dataP.get(w).getNama());
+                    }
+                } else {
+                    Toast.makeText(itemView.getContext(), "data pelanggan kosong header", Toast.LENGTH_SHORT).show();
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(),android.R.layout.simple_list_item_1,arrayPelanggan);
+                autoCompleteTextView.setAdapter(adapter);
 
             } else if (viewType == Footer) {
                 submit = (Button) itemView.findViewById(R.id.submit_order);
@@ -89,6 +126,7 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        getIdNama();
                         loading = ProgressDialog.show(itemView.getContext(), null, "Mohon Tunggu...", true, false);
 
                         String dataBarang[] = new String[dataOrder.size()-1];
@@ -102,13 +140,14 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
                         String dataBarangString = mytoString(dataBarang, ", ");
                         String latitude = dataOrder.get(0).getLatitude();
                         String longitude = dataOrder.get(0).getLongitude();
-                        mApiService.postBarang(dataOrder.get(0).getId_karyawan(), dataBarangString, nm, alamatClient, dataQtyString, Double.valueOf(latitude), Double.valueOf(longitude))
+                        mApiService.postBarang(dataOrder.get(0).getId_karyawan(), dataBarangString, pelanggan_id, dataQtyString, Double.valueOf(latitude), Double.valueOf(longitude))
                                 .enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                         JSONObject jsonRESULTS;
                                         if (response.isSuccessful()) {
                                             loading.dismiss();
+//                                            arrayPelanggan.clear();
                                             Toast.makeText(itemView.getContext(), "Berhasil input order", Toast.LENGTH_SHORT).show();
                                             // update data recycler view
                                             Intent intent = new Intent(itemView.getContext(), MainActivity.class);
@@ -139,6 +178,14 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
 //                        System.out.println(dataOrder.get(0).getId_karyawan());
                     }
                 });
+            }
+        }
+    }
+
+    public void getIdNama() {
+        for (int k = 0;k < dataP.size();k++) {
+            if (nm.equals(dataP.get(k).getNama())) {
+                pelanggan_id = dataP.get(k).getId();
             }
         }
     }
@@ -211,7 +258,7 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
 
         if(headerModelArrayList.get(position).getViewType().equals("header")){
 
-            holder.nama.addTextChangedListener(new TextWatcher() {
+            holder.autoCompleteTextView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -228,22 +275,22 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
                 }
             });
 
-            holder.alamat.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    alamatClient = s.toString();
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
+//            holder.alamat.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    alamatClient = s.toString();
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//
+//                }
+//            });
 
         }
         else if(headerModelArrayList.get(position).getViewType().equals("footer")){
@@ -304,13 +351,17 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
         return headerModelArrayList.size();
     }
 
+//    public int getCountPel() {
+//        return dataP.size();
+//    }
+
     public void nmClient(String nm) {
         this.nm = nm;
     }
 
-    public void alamatClient(String alamat) {
-        this.alamatClient = alamat;
-    }
+//    public void alamatClient(String alamat) {
+//        this.alamatClient = alamat;
+//    }
 
     private static String mytoString(String[] theAray, String delimiter) {
         StringBuilder sb = new StringBuilder();

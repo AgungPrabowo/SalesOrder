@@ -8,7 +8,7 @@ public class SharedPrefManager {
     public static final String SP_NAMA = "spNama";
     public static final String SP_EMAIL = "spEmail";
     public static final String SP_SUDAH_LOGIN = "spSudahLogin";
-    public static final String SP_ROLE_ID = "spRole_id";
+//    public static final String SP_ROLE_ID = "spRole_id";
     public static final String SP_KARYAWAN_ID = "spKaryawan_id";
     public static final String SP_ACC_TOKEN = "spAccToken";
     public static final String SP_BUTTON_STATUS = "spButtonStatus";
@@ -58,9 +58,9 @@ public class SharedPrefManager {
         return sp.getBoolean(SP_SUDAH_LOGIN, false);
     }
 
-    public String getSPRoleID(){
-        return sp.getString(SP_ROLE_ID, "");
-    }
+//    public String getSPRoleID(){
+//        return sp.getString(SP_ROLE_ID, "");
+//    }
 
     public String getSPKaryawanID(){
         return sp.getString(SP_KARYAWAN_ID, "");

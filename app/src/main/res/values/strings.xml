@@ -14,5 +14,7 @@
     <string name="GPSAlertDialogMessage">GPSAlertDialogMessage</string>
     <string name="GPSAlertDialogTitle">GPSAlertDialogTitle</string>
     <string name="cancel">cancel</string>
-    <string name="title_activity_map">Map</string>
+    <string name="title_activity_map">Daftar Order</string>
+    <string name="title_activity_pelanggan">Daftar Pelanggan</string>
+    <string name="logout">Logout</string>
 </resources>

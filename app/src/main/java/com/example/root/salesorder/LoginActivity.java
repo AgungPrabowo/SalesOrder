@@ -88,12 +88,12 @@ public class LoginActivity extends AppCompatActivity {
                                     // Shared Pref ini berfungsi untuk menjadi trigger session login
                                     String karyawan_id = jsonObject.getString("karyawan_id");
                                     Log.d("tes", karyawan_id);
-                                    String role_id = jsonObject.getString("role_id");
+//                                    String role_id = jsonObject.getString("role_id");
 //                                    String acc_token = jsonRESULTS.getString("access_token");
 //                                    String name = jsonRESULTS.getJSONObject("user").getString("name");
                                     String name = jsonObject.getString("name");
                                     sharedPrefManager.saveSPString(SharedPrefManager.SP_KARYAWAN_ID, karyawan_id);
-                                    sharedPrefManager.saveSPString(SharedPrefManager.SP_ROLE_ID, role_id);
+//                                    sharedPrefManager.saveSPString(SharedPrefManager.SP_ROLE_ID, role_id);
 //                                    sharedPrefManager.saveSPString(SharedPrefManager.SP_ACC_TOKEN, acc_token);
                                     sharedPrefManager.saveSPString(SharedPrefManager.SP_NAMA, name);
                                     sharedPrefManager.saveSPBoolean(SharedPrefManager.SP_SUDAH_LOGIN, true);

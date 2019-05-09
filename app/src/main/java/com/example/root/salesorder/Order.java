@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 
 public class Order extends AppCompatActivity {
     @BindView(R.id.nm_client) EditText nm_client;
-    @BindView(R.id.alamat_client) EditText alamat_pembeli;
+//    @BindView(R.id.alamat_client) EditText alamat_pembeli;
     @BindView(R.id.submit_order) Button submit_order;
     ProgressDialog loading;
 

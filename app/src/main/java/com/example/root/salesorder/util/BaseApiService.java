@@ -1,5 +1,6 @@
 package com.example.root.salesorder.util;
 
+import com.example.root.salesorder.Model.ModelPelanggan;
 import com.example.root.salesorder.ModelOrder;
 
 import java.util.List;
@@ -39,6 +40,9 @@ public interface BaseApiService {
     @GET("barang")
     Call<List<ModelOrder>> getBarang();
 
+    @GET("pelanggan")
+    Call<List<ModelPelanggan>> getPelanggan();
+
     @GET("order")
     Call<List<ModelOrder1>> getOrder();
 
@@ -46,8 +50,9 @@ public interface BaseApiService {
     @POST("order")
     Call<ResponseBody> postBarang(@Field("karyawan_id") String karyawan_id,
                                   @Field("barang_id") String barang_id,
-                                  @Field("nama") String nama,
-                                  @Field("alamat") String alamat,
+                                  @Field("pelanggan_id") String pelanggan_id,
+//                                  @Field("nama") String nama,
+//                                  @Field("alamat") String alamat,
                                   @Field("qty") String qty,
                                   @Field("latitude") double latitude,
                                   @Field("longitude") double longitude);

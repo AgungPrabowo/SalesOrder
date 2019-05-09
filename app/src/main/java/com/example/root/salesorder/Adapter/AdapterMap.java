@@ -75,23 +75,9 @@ public class AdapterMap extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public class Item extends RecyclerView.ViewHolder {
         TextView textView;
-        String[] latitude = {"-6.999915", "-6.9921732"};
-        String[] longitude = {"110.445062", "110.4043464"};
         public Item(final View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.item);
-
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    progressDialog.show();
-//                    Toast.makeText(context, "tes", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(itemView.getContext(), Map.class);
-//                    intent.putExtra("latitude", latitude);
-//                    intent.putExtra("longitude", longitude);
-//                    itemView.getContext().startActivity(intent);
-                }
-            });
         }
     }
 
