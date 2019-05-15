@@ -17,4 +17,8 @@
     <string name="title_activity_map">Daftar Order</string>
     <string name="title_activity_pelanggan">Daftar Pelanggan</string>
     <string name="logout">Logout</string>
+    <string name="text_logo">Android Tutorials Hub</string>
+    <string name="text_hint_email">Email</string>
+    <string name="text_hint_password">Password</string>
+    <string name="text_login">Login</string>
 </resources>

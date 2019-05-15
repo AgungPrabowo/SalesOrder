@@ -51,8 +51,14 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loading = ProgressDialog.show(mContext, null, "Mohon Tunggu...", true, false);
-                requestLogin();
+                if (email.getText().toString().equals("")){
+                    Toast.makeText(mContext, "Email tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                } else if (password.getText().toString().equals("")){
+                    Toast.makeText(mContext, "Password tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                } else {
+                    loading = ProgressDialog.show(mContext, null, "Mohon Tunggu...", true, false);
+                    requestLogin();
+                }
             }
         });
 

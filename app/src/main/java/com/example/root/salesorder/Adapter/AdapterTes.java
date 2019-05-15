@@ -47,7 +47,8 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
     public static final int Normal = 2;
     public static final int Footer = 3;
 
-    String nm, alamatClient, pelanggan_id;
+    String nm, alamatClient;
+    String pelanggan_id = "0";
 
     private LayoutInflater inflater;
     private List<Model> headerModelArrayList;
@@ -126,42 +127,50 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getIdNama();
-                        loading = ProgressDialog.show(itemView.getContext(), null, "Mohon Tunggu...", true, false);
+                        if (nm.isEmpty()) {
+                            Toast.makeText(itemView.getContext(), "Pelanggan tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                        } else {
+                            getIdNama();
+                            if(pelanggan_id.equals("0")){
+                                Toast.makeText(itemView.getContext(), "Pelanggan tidak terdaftar", Toast.LENGTH_SHORT).show();
+                            } else {
+                                loading = ProgressDialog.show(itemView.getContext(), null, "Mohon Tunggu...", true, false);
 
-                        String dataBarang[] = new String[dataOrder.size()-1];
-                        String dataQty[] = new String[dataOrder.size()-1];
-                        for (int i=0;i < dataOrder.size()-1;i++) {
-                            ModelOrder mo = dataOrder.get(i+1);
-                            dataBarang[i] = mo.getId();
-                            dataQty[i] = mo.getJumlah();
-                        }
-                        String dataQtyString = mytoString(dataQty, ", ");
-                        String dataBarangString = mytoString(dataBarang, ", ");
-                        String latitude = dataOrder.get(0).getLatitude();
-                        String longitude = dataOrder.get(0).getLongitude();
-                        mApiService.postBarang(dataOrder.get(0).getId_karyawan(), dataBarangString, pelanggan_id, dataQtyString, Double.valueOf(latitude), Double.valueOf(longitude))
-                                .enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        JSONObject jsonRESULTS;
-                                        if (response.isSuccessful()) {
-                                            loading.dismiss();
+                                String dataBarang[] = new String[dataOrder.size()-1];
+                                String dataQty[] = new String[dataOrder.size()-1];
+                                for (int i=0;i < dataOrder.size()-1;i++) {
+                                    ModelOrder mo = dataOrder.get(i+1);
+                                    dataBarang[i] = mo.getId();
+                                    dataQty[i] = mo.getJumlah();
+                                }
+                                String dataQtyString = mytoString(dataQty, ", ");
+                                String dataBarangString = mytoString(dataBarang, ", ");
+                                String latitude = dataOrder.get(0).getLatitude();
+                                String longitude = dataOrder.get(0).getLongitude();
+                                mApiService.postBarang(dataOrder.get(0).getId_karyawan(), dataBarangString, pelanggan_id, dataQtyString, Double.valueOf(latitude), Double.valueOf(longitude))
+                                        .enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                JSONObject jsonRESULTS;
+                                                if (response.isSuccessful()) {
+                                                    loading.dismiss();
 //                                            arrayPelanggan.clear();
-                                            Toast.makeText(itemView.getContext(), "Berhasil input order", Toast.LENGTH_SHORT).show();
-                                            // update data recycler view
-                                            Intent intent = new Intent(itemView.getContext(), MainActivity.class);
-                                            itemView.getContext().startActivity(intent);
-                                        } else {
+                                                    Toast.makeText(itemView.getContext(), "Berhasil input order", Toast.LENGTH_SHORT).show();
+                                                    // update data recycler view
+                                                    Intent intent = new Intent(itemView.getContext(), MainActivity.class);
+                                                    itemView.getContext().startActivity(intent);
+                                                } else {
 
-                                        }
-                                    }
+                                                }
+                                            }
 
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                                    }
-                                });
+                                            }
+                                        });
+                            }
+                        }
 
 //                        ModelOrder mo = dataOrder.get(1);
 //                        Model model = new Model();
@@ -174,7 +183,7 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
 //
 //                        System.out.println(dataOrder.get(0).getLongitude());
 //                        System.out.println(dataOrder.get(0).getLatitude());
-                        System.out.println(latitude+" "+longitude);
+//                        System.out.println(latitude+" "+longitude);
 //                        System.out.println(dataOrder.get(0).getId_karyawan());
                     }
                 });
