@@ -31,9 +31,12 @@ import com.example.root.salesorder.util.UtilsApi;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -147,7 +150,12 @@ public class AdapterTes extends RecyclerView.Adapter<AdapterTes.MyViewHolder> {
                                 String dataBarangString = mytoString(dataBarang, ", ");
                                 String latitude = dataOrder.get(0).getLatitude();
                                 String longitude = dataOrder.get(0).getLongitude();
-                                mApiService.postBarang(dataOrder.get(0).getId_karyawan(), dataBarangString, pelanggan_id, dataQtyString, Double.valueOf(latitude), Double.valueOf(longitude))
+                                Date datee = new Date(); // this object contains the current date value
+                                SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
+                                formatter.setTimeZone(TimeZone.getTimeZone("Asia/Jakarta"));
+                                System.out.println(formatter.format(datee));
+                                mApiService.postBarang(dataOrder.get(0).getId_karyawan(), dataBarangString,
+                                        pelanggan_id, dataQtyString, Double.valueOf(latitude), Double.valueOf(longitude), formatter.format(datee))
                                         .enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
