@@ -92,12 +92,12 @@ public class LoginActivity extends AppCompatActivity {
                                     // akan diparsing ke activity selanjutnya.
                                     Toast.makeText(mContext,     "BERHASIL LOGIN", Toast.LENGTH_SHORT).show();
                                     // Shared Pref ini berfungsi untuk menjadi trigger session login
-                                    String karyawan_id = jsonObject.getString("karyawan_id");
+                                    String karyawan_id = jsonObject.getString("id");
                                     Log.d("tes", karyawan_id);
 //                                    String role_id = jsonObject.getString("role_id");
 //                                    String acc_token = jsonRESULTS.getString("access_token");
 //                                    String name = jsonRESULTS.getJSONObject("user").getString("name");
-                                    String name = jsonObject.getString("name");
+                                    String name = jsonObject.getString("nama_depan");
                                     sharedPrefManager.saveSPString(SharedPrefManager.SP_KARYAWAN_ID, karyawan_id);
 //                                    sharedPrefManager.saveSPString(SharedPrefManager.SP_ROLE_ID, role_id);
 //                                    sharedPrefManager.saveSPString(SharedPrefManager.SP_ACC_TOKEN, acc_token);

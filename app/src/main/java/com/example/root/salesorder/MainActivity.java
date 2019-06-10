@@ -309,6 +309,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.list_pelanggan) {
             startActivity(new Intent(MainActivity.this, MainActivityPelanggan.class)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+        } else if (id == R.id.list_order) {
+            startActivity(new Intent(MainActivity.this, MainActivityOrder.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
         } else if (id == R.id.logout) {
             spManager.saveSPBoolean(SharedPrefManager.SP_SUDAH_LOGIN, false);
             startActivity(new Intent(MainActivity.this, LoginActivity.class)

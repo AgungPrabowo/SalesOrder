@@ -41,7 +41,9 @@
         <activity
             android:name=".MainActivityPelanggan"
             android:label="tes"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".MainActivityOrder"></activity>
+        <activity android:name=".MainActivityOrderInvoice"></activity>
     </application>
 
 </manifest>

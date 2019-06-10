@@ -20,6 +20,7 @@ import com.example.root.salesorder.util.BaseApiService;
 import com.example.root.salesorder.util.ModelOrder1;
 import com.example.root.salesorder.util.UtilsApi;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -36,12 +37,15 @@ public class    MapTrackingActivity extends AppCompatActivity {
     ListView listOrder;
     List<String> latitude = new ArrayList<String>();
     List<String> longitude = new ArrayList<String>();
+    SharedPrefManager spManager;
+    SharedPrefManager sharedPrefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_tracking);
         mApiService = UtilsApi.getAPIService(); // meng-init yang ada di package api helper
+        sharedPrefManager = new SharedPrefManager(this);
         Toolbar toolbar = findViewById(R.id.toolbarMap);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -50,6 +54,7 @@ public class    MapTrackingActivity extends AppCompatActivity {
     }
 
     private void getDataOrder() {
+        spManager = new SharedPrefManager(this);
         mApiService.getOrder().enqueue(new Callback<List<ModelOrder1>>() {
             @Override
             public void onResponse(Call<List<ModelOrder1>> call, Response<List<ModelOrder1>> response) {
@@ -59,75 +64,41 @@ public class    MapTrackingActivity extends AppCompatActivity {
                 }
                 dataOrder1 = new ArrayList<ModelOrder1>();
                 List<ModelOrder1> orders = response.body();
-                String[] dateOrder = new String[orders.size()];
-                final ProgressDialog progressDialog = new ProgressDialog(MapTrackingActivity.this);
+                ArrayList dateOrder = new ArrayList<String>();
 
                 for (int i = 0;i < orders.size();i++) {
-                    dataOrder1.add(new ModelOrder1(orders.get(i).getCreated_at(),
+                    dataOrder1.add(new ModelOrder1(orders.get(i).getKaryawan_id(), orders.get(i).getCreated_at(),
                             orders.get(i).getLatitude(), orders.get(i).getLongitude()));
                     // only get date
-                    dateOrder[i] = orders.get(i).getCreated_at().substring(0, 10);
+                    if(spManager.getSPKaryawanID().equals(orders.get(i).getKaryawan_id())) {
+                        dateOrder.add(orders.get(i).getCreated_at().substring(0, 10));
+                    }
                 }
-
-                LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(Arrays.asList(dateOrder));
-                final String[] dateOrderWithoutDuplicate = linkedHashSet.toArray(new String[] {});
-                System.out.println(Arrays.toString(dateOrderWithoutDuplicate));
-
 
                 listOrder = findViewById(R.id.daftar_order);
+                LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(dateOrder);
+                final String[] dateOrderWithoutDuplicate = linkedHashSet.toArray(new String[] {});
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.map_row,
-                        R.id.item, dateOrderWithoutDuplicate);
+                            R.id.item, dateOrderWithoutDuplicate);
                 listOrder.setAdapter(arrayAdapter);
                 listOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        progressDialog.show();
-                        progressDialog.setMessage("Mohon Tunggu...");
-                        getCoordinate(dateOrderWithoutDuplicate[position]);
-                        progressDialog.dismiss();
-//                System.out.println(latitude);
-                        String[] arrayLatitude = latitude.toArray(new String[latitude.size()]);
-                        String[] arrayLongitude = longitude.toArray(new String[longitude.size()]);
-                        System.out.println(Arrays.toString(arrayLatitude));
-                        System.out.println(Arrays.toString(arrayLongitude));
-                        Intent intent = new Intent(view.getContext(), Map.class);
-                        intent.putExtra("latitude", arrayLatitude);
-                        intent.putExtra("longitude", arrayLongitude);
-                        view.getContext().startActivity(intent);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<List<ModelOrder1>> call, Throwable t) {
-
-            }
-        });
-    }
-
-    public void getDataOrder1() {
-        mApiService.getOrder().enqueue(new Callback<List<ModelOrder1>>() {
-            @Override
-            public void onResponse(Call<List<ModelOrder1>> call, Response<List<ModelOrder1>> response) {
-                dataOrder1 = new ArrayList<ModelOrder1>();
-                List<ModelOrder1> orders = response.body();
-                String[] dateOrder = new String[orders.size()];
-
-                for (int i = 0;i < orders.size();i++) {
-                    dataOrder1.add(new ModelOrder1(orders.get(i).getCreated_at(),
-                            orders.get(i).getLatitude(), orders.get(i).getLongitude()));
-                    // only get date
-                    dateOrder[i] = orders.get(i).getCreated_at().substring(0, 10);
-                }
-
-                LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(Arrays.asList(dateOrder));
-                String[] dateOrderWithoutDuplicate = linkedHashSet.toArray(new String[] {});
-                System.out.println(Arrays.toString(dateOrderWithoutDuplicate));
-
-//                ProgressDialog progressDialog = new ProgressDialog(MapTrackingActivity.this);
-//                recyclerView = (RecyclerView) findViewById(R.id.recyclerviewMap);
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//                recyclerView.setAdapter(new AdapterMap(getApplicationContext(), dateOrderWithoutDuplicate, progressDialog, dataOrder1));
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            ProgressDialog progressDialog = new ProgressDialog(MapTrackingActivity.this);
+                            progressDialog.show();
+                            progressDialog.setMessage("Mohon Tunggu...");
+                            getCoordinate(dateOrderWithoutDuplicate[position]);
+                            progressDialog.dismiss();
+                            String[] arrayLatitude = latitude.toArray(new String[latitude.size()]);
+                            String[] arrayLongitude = longitude.toArray(new String[longitude.size()]);
+                            System.out.println(Arrays.toString(arrayLatitude));
+                            System.out.println(Arrays.toString(arrayLongitude));
+                            Intent intent = new Intent(view.getContext(), Map.class);
+                            intent.putExtra("latitude", arrayLatitude);
+                            intent.putExtra("longitude", arrayLongitude);
+                            view.getContext().startActivity(intent);
+                        }
+                    });
             }
 
             @Override
@@ -138,12 +109,14 @@ public class    MapTrackingActivity extends AppCompatActivity {
     }
 
     public void getCoordinate(String dateOrder) {
+        spManager = new SharedPrefManager(this);
         int countModelOrder = dataOrder1.size();
         latitude.clear();
         longitude.clear();
 
         for (int i = 0;i < countModelOrder;i++) {
-            if (dateOrder.equals(dataOrder1.get(i).getCreated_at().substring(0, 10))) {
+            if (dateOrder.equals(dataOrder1.get(i).getCreated_at().substring(0, 10)) &&
+                    spManager.getSPKaryawanID().equals(dataOrder1.get(i).getKaryawan_id())) {
                 latitude.add(dataOrder1.get(i).getLatitude());
                 longitude.add(dataOrder1.get(i).getLongitude());
             }

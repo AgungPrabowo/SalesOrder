@@ -1,5 +1,7 @@
 package com.example.root.salesorder.util;
 
+import com.example.root.salesorder.Model.ModelListOrder;
+import com.example.root.salesorder.Model.ModelOrderInvoice;
 import com.example.root.salesorder.Model.ModelPelanggan;
 import com.example.root.salesorder.ModelOrder;
 
@@ -45,6 +47,13 @@ public interface BaseApiService {
 
     @GET("order")
     Call<List<ModelOrder1>> getOrder();
+
+    @GET("order/{karyawan_id}")
+    Call<List<ModelListOrder>> getListOrder(@Path("karyawan_id") String karyawan_id);
+
+    @GET("order/{karyawan_id}/{tgl}")
+    Call<List<ModelOrderInvoice>> getOrderInvoice(@Path("karyawan_id") String karyawan_id,
+                                                  @Path("tgl") String tgl);
 
     @FormUrlEncoded
     @POST("order")

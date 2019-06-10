@@ -1,15 +1,25 @@
 package com.example.root.salesorder.util;
 
 public class ModelOrder1 {
+    String karyawan_id;
     String created_at;
     String latitude;
     String longitude;
 
 
-    public ModelOrder1(String created_at, String latitude, String longitude) {
+    public ModelOrder1(String karyawan_id, String created_at, String latitude, String longitude) {
         this.created_at = created_at;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.karyawan_id = karyawan_id;
+    }
+
+    public String getKaryawan_id() {
+        return karyawan_id;
+    }
+
+    public void setKaryawan_id(String karyawan_id) {
+        this.karyawan_id = karyawan_id;
     }
 
     public String getLatitude() {

@@ -14,8 +14,9 @@
     <string name="GPSAlertDialogMessage">GPSAlertDialogMessage</string>
     <string name="GPSAlertDialogTitle">GPSAlertDialogTitle</string>
     <string name="cancel">cancel</string>
-    <string name="title_activity_map">Daftar Order</string>
+    <string name="title_activity_map">Daftar Order Map</string>
     <string name="title_activity_pelanggan">Daftar Pelanggan</string>
+    <string name="title_activity_list_order">Daftar Order</string>
     <string name="logout">Logout</string>
     <string name="text_logo">Android Tutorials Hub</string>
     <string name="text_hint_email">Email</string>
