@@ -19,7 +19,7 @@
             android:value="QCjW5OgYBIDYYVeJ9eH3A9Z1ZLQ68hD4" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".SplashScreen"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -44,6 +44,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".MainActivityOrder"></activity>
         <activity android:name=".MainActivityOrderInvoice"></activity>
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
